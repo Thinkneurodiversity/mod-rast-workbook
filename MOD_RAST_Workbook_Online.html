@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reasonable Adjustments in the Workplace — Session Workbook</title>
+<style>
+  /* ── Design tokens ─────────────────────────────────────────── */
+  :root {
+    --navy:      #1B2B45;
+    --navy-mid:  #243655;
+    --teal:      #2A7F8A;
+    --teal-light:#3BA3B0;
+    --gold:      #C69C3F;
+    --gold-pale: #F5EDD5;
+    --white:     #FFFFFF;
+    --off-white: #F7F8FA;
+    --grey-1:    #E8EAED;
+    --grey-2:    #C4C8CF;
+    --grey-3:    #8A909A;
+    --text:      #1B2432;
+    --text-mid:  #3D4554;
+
+    --font-display: 'Georgia', serif;
+    --font-body:    system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    --radius:  6px;
+    --radius-lg: 12px;
+    --shadow:  0 2px 12px rgba(27,43,69,0.10);
+    --shadow-lg: 0 6px 28px rgba(27,43,69,0.14);
+  }
+
+  /* ── Reset ─────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    font-family: var(--font-body);
+    color: var(--text);
+    background: var(--off-white);
+    line-height: 1.6;
+  }
+
+  /* ── Layout ─────────────────────────────────────────────────── */
+  .shell {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+  }
+  @media (max-width: 860px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .sidebar.open { display: flex; position: fixed; top: 0; left: 0; width: 280px; height: 100vh; z-index: 200; box-shadow: var(--shadow-lg); }
+  }
+
+  /* ── Sidebar ─────────────────────────────────────────────────── */
+  .sidebar {
+    background: var(--navy);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-header {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+  }
+  .sidebar-logo {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .sidebar-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: normal;
+    line-height: 1.35;
+    color: var(--white);
+  }
+  .sidebar-meta {
+    font-size: 0.72rem;
+    color: var(--grey-2);
+    margin-top: 6px;
+  }
+  .progress-bar-wrap {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .progress-label {
+    font-size: 0.70rem;
+    color: var(--grey-2);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+  .progress-track {
+    background: rgba(255,255,255,0.12);
+    border-radius: 4px;
+    height: 5px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .progress-pct {
+    font-size: 0.70rem;
+    color: var(--gold);
+    margin-top: 5px;
+    text-align: right;
+  }
+  nav { flex: 1; padding: 12px 0; }
+  .nav-section-label {
+    font-size: 0.64rem;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--grey-3);
+    padding: 12px 20px 4px;
+  }
+  .nav-link {
+    display: block;
+    padding: 8px 20px;
+    font-size: 0.83rem;
+    color: rgba(255,255,255,0.72);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    line-height: 1.35;
+  }
+  .nav-link:hover { color: var(--white); background: rgba(255,255,255,0.06); }
+  .nav-link.active { color: var(--white); border-left-color: var(--gold); background: rgba(255,255,255,0.08); }
+  .sidebar-footer {
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.70rem;
+    color: var(--grey-3);
+    line-height: 1.5;
+  }
+
+  /* ── Mobile header ───────────────────────────────────────────── */
+  .mobile-header {
+    display: none;
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 16px;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  @media (max-width: 860px) { .mobile-header { display: flex; } }
+  .mobile-header .logo { font-size: 0.80rem; font-family: var(--font-display); color: var(--gold); }
+  .burger { background: none; border: none; color: var(--white); cursor: pointer; padding: 4px; font-size: 1.4rem; }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 150; }
+  .overlay.open { display: block; }
+
+  /* ── Main content ────────────────────────────────────────────── */
+  .main { min-width: 0; }
+  .section {
+    padding: 48px 40px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  @media (max-width: 600px) { .section { padding: 32px 18px; } }
+
+  /* ── Cover ───────────────────────────────────────────────────── */
+  .cover {
+    background: var(--navy);
+    color: var(--white);
+    padding: 60px 40px;
+    max-width: 100%;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 340px; height: 340px;
+    border-radius: 50%;
+    background: rgba(42,127,138,0.18);
+    pointer-events: none;
+  }
+  .cover-inner { max-width: 820px; margin: 0 auto; position: relative; }
+  .cover-eyebrow {
+    font-size: 0.72rem;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 16px;
+  }
+  .cover-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    font-weight: normal;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .cover-subtitle {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.72);
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+  .cover-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 540px;
+  }
+  @media (max-width: 500px) { .cover-fields { grid-template-columns: 1fr; } }
+  .cover-field label {
+    display: block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .cover-field input {
+    width: 100%;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    color: var(--white);
+    font-size: 0.90rem;
+    font-family: var(--font-body);
+  }
+  .cover-field input::placeholder { color: rgba(255,255,255,0.38); }
+  .cover-field input:focus { outline: 2px solid var(--teal-light); outline-offset: 2px; border-color: transparent; }
+  .cover-author {
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.80rem;
+    color: rgba(255,255,255,0.55);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .cover-author strong { color: var(--white); }
+
+  /* ── Section headings ────────────────────────────────────────── */
+  .section-number {
+    display: inline-block;
+    width: 32px; height: 32px;
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 32px;
+    font-size: 0.80rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .section-eyebrow {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--teal);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+    font-weight: normal;
+    color: var(--navy);
+    margin-bottom: 8px;
+    line-height: 1.25;
+  }
+  .section-desc {
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    margin-bottom: 28px;
+    line-height: 1.65;
+    border-left: 3px solid var(--gold);
+    padding-left: 14px;
+  }
+  h3 {
+    font-size: 1.0rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 10px;
+    margin-top: 24px;
+  }
+
+  /* ── Dividers ────────────────────────────────────────────────── */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--grey-1);
+    margin: 0;
+  }
+
+  /* ── Callout boxes ───────────────────────────────────────────── */
+  .callout {
+    background: var(--gold-pale);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    color: var(--text);
+    margin: 18px 0;
+    line-height: 1.55;
+  }
+  .callout strong { color: var(--navy); }
+  .callout-teal {
+    background: #EAF6F7;
+    border-left-color: var(--teal);
+  }
+  .callout-navy {
+    background: #EEF0F5;
+    border-left-color: var(--navy);
+  }
+
+  /* ── Reflection cards ────────────────────────────────────────── */
+  .reflection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 20px 0;
+  }
+  @media (max-width: 620px) { .reflection-grid { grid-template-columns: 1fr; } }
+  .reflection-card {
+    background: var(--white);
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+  .reflection-card .moment-tag {
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--teal);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .reflection-card p {
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    margin-bottom: 10px;
+    line-height: 1.55;
+  }
+  .reflection-card textarea {
+    width: 100%;
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    color: var(--text);
+    resize: vertical;
+    min-height: 72px;
+    background: var(--off-white);
+    transition: border-color 0.15s;
+    line-height: 1.5;
+  }
+  .reflection-card textarea:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  /* ── True / False quiz ───────────────────────────────────────── */
+  .tf-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+  .tf-item {
+    background: var(--white);
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .tf-item.correct { border-color: #2E9E6E; background: #EDF8F3; }
+  .tf-item.incorrect { border-color: #C94040; background: #FDEAEA; }
+  .tf-num {
+    min-width: 28px; height: 28px;
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .tf-content { flex: 1; }
+  .tf-content p { font-size: 0.88rem; line-height: 1.5; margin-bottom: 10px; }
+  .tf-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tf-btn {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--grey-2);
+    background: var(--off-white);
+    font-size: 0.80rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text-mid);
+  }
+  .tf-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .tf-btn.selected-true { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .tf-btn.selected-false { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .tf-reveal { display: none; margin-top: 10px; font-size: 0.80rem; line-height: 1.5; }
+  .tf-reveal .answer-tag {
+    font-weight: 700;
+    font-size: 0.73rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-right: 6px;
+  }
+  .correct .answer-tag { background: #2E9E6E; color: #fff; }
+  .incorrect .answer-tag { background: #C94040; color: #fff; }
+
+  /* ── Info panels (scene setting, legal) ──────────────────────── */
+  .three-duties {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  @media (max-width: 680px) { .three-duties { grid-template-columns: 1fr; } }
+  .duty-card {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+  }
+  .duty-card .tag {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .duty-card h4 { font-size: 0.90rem; margin-bottom: 8px; color: var(--white); }
+  .duty-card p { font-size: 0.80rem; color: rgba(255,255,255,0.72); line-height: 1.55; }
+
+  /* ── Case law cards ──────────────────────────────────────────── */
+  .case-card {
+    background: var(--white);
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+  .case-card-header {
+    background: var(--navy-mid);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .case-name { color: var(--white); font-size: 0.88rem; font-weight: 600; line-height: 1.35; }
+  .case-tag {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--gold);
+    color: var(--navy);
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    font-weight: 700;
+    align-self: flex-start;
+  }
+  .case-body { padding: 14px 16px; }
+  .case-summary {
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    margin-bottom: 14px;
+    line-height: 1.55;
+  }
+  .case-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 540px) { .case-fields { grid-template-columns: 1fr; } }
+  .case-field label {
+    display: block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--teal);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .case-field textarea {
+    width: 100%;
+    min-height: 70px;
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    resize: vertical;
+    background: var(--off-white);
+    color: var(--text);
+    transition: border-color 0.15s;
+  }
+  .case-field textarea:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  /* ── EEES framework ──────────────────────────────────────────── */
+  .eees-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+  @media (max-width: 560px) { .eees-grid { grid-template-columns: 1fr; } }
+  .eees-card {
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    background: var(--white);
+    border: 1px solid var(--grey-1);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .eees-card::before {
+    content: attr(data-letter);
+    position: absolute;
+    right: 10px; top: 6px;
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    color: var(--grey-1);
+    font-weight: bold;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .eees-card .eees-label {
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .eees-card[data-color="e1"] { border-top: 4px solid #2A7F8A; }
+  .eees-card[data-color="e1"] .eees-label { color: #2A7F8A; }
+  .eees-card[data-color="e2"] { border-top: 4px solid #C69C3F; }
+  .eees-card[data-color="e2"] .eees-label { color: #C69C3F; }
+  .eees-card[data-color="e3"] { border-top: 4px solid #1B2B45; }
+  .eees-card[data-color="e3"] .eees-label { color: #1B2B45; }
+  .eees-card[data-color="s"]  { border-top: 4px solid #7E5CA6; }
+  .eees-card[data-color="s"]  .eees-label { color: #7E5CA6; }
+  .eees-card h4 { font-size: 0.96rem; color: var(--navy); margin-bottom: 8px; }
+  .eees-card p  { font-size: 0.80rem; color: var(--text-mid); line-height: 1.55; margin-bottom: 4px; }
+  .eees-card strong { font-size: 0.75rem; display: block; color: var(--text-mid); margin-top: 4px; }
+
+  /* ── WMW framework ───────────────────────────────────────────── */
+  .wmw-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .wmw-table th, .wmw-table td { padding: 10px 12px; border-bottom: 1px solid var(--grey-1); text-align: left; vertical-align: top; }
+  .wmw-table th { background: var(--navy); color: var(--white); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; }
+  .wmw-table td:first-child { font-weight: 700; color: var(--teal); font-size: 0.85rem; width: 90px; }
+  .wmw-table td:last-child { font-size: 0.84rem; color: var(--text-mid); line-height: 1.55; }
+  .wmw-table tr:nth-child(even) td { background: var(--off-white); }
+
+  /* ── Exercise blocks ─────────────────────────────────────────── */
+  .exercise-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 620px) { .exercise-grid { grid-template-columns: 1fr; } }
+  .exercise-block {
+    background: var(--white);
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .exercise-block h4 { font-size: 0.88rem; color: var(--navy); margin-bottom: 4px; }
+  .exercise-block .scenario-text {
+    font-size: 0.80rem;
+    color: var(--text-mid);
+    margin-bottom: 14px;
+    line-height: 1.55;
+    background: var(--off-white);
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    border-left: 3px solid var(--teal);
+  }
+  .wmw-mini label {
+    display: block;
+    font-size: 0.64rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--teal);
+    font-weight: 700;
+    margin: 8px 0 3px;
+  }
+  .wmw-mini textarea {
+    width: 100%;
+    min-height: 52px;
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius);
+    padding: 7px 9px;
+    font-size: 0.80rem;
+    font-family: var(--font-body);
+    resize: vertical;
+    background: var(--off-white);
+    color: var(--text);
+    transition: border-color 0.15s;
+  }
+  .wmw-mini textarea:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  /* ── Scenarios ───────────────────────────────────────────────── */
+  .scenario-card {
+    background: var(--white);
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .scenario-header {
+    background: var(--teal);
+    color: var(--white);
+    padding: 14px 18px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+  .scenario-header span { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.10em; opacity: 0.80; display: block; margin-bottom: 2px; }
+  .scenario-body { padding: 18px; }
+  .scenario-fields { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  @media (max-width: 680px) { .scenario-fields { grid-template-columns: 1fr; } }
+  .scenario-field label {
+    display: block;
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--navy);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .scenario-field textarea {
+    width: 100%;
+    min-height: 90px;
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    resize: vertical;
+    background: var(--off-white);
+    color: var(--text);
+    transition: border-color 0.15s;
+  }
+  .scenario-field textarea:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  /* ── Late-stage checklist ────────────────────────────────────── */
+  .checklist { list-style: none; counter-reset: ck; display: flex; flex-direction: column; gap: 10px; margin: 18px 0; }
+  .checklist li {
+    counter-increment: ck;
+    background: var(--white);
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px 14px 52px;
+    position: relative;
+    box-shadow: var(--shadow);
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+  .checklist li::before {
+    content: counter(ck);
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    width: 26px; height: 26px;
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .checklist li strong { color: var(--navy); display: block; margin-bottom: 2px; }
+
+  /* ── Toolkit ─────────────────────────────────────────────────── */
+  .toolkit-field {
+    background: var(--white);
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+  .toolkit-field .tk-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--teal);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .toolkit-field p { font-size: 0.82rem; color: var(--text-mid); margin-bottom: 10px; line-height: 1.5; }
+  .toolkit-field textarea {
+    width: 100%;
+    min-height: 90px;
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    font-size: 0.84rem;
+    font-family: var(--font-body);
+    resize: vertical;
+    background: var(--off-white);
+    color: var(--text);
+    transition: border-color 0.15s;
+  }
+  .toolkit-field textarea:focus { outline: none; border-color: var(--teal); background: var(--white); }
+
+  /* ── Quick reference ─────────────────────────────────────────── */
+  .qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 20px 0; }
+  @media (max-width: 640px) { .qr-grid { grid-template-columns: 1fr; } }
+  .qr-block {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+  }
+  .qr-block h4 { font-size: 0.82rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.10em; margin-bottom: 14px; }
+  .qr-block table { width: 100%; border-collapse: collapse; }
+  .qr-block td { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.10); font-size: 0.78rem; vertical-align: top; line-height: 1.45; }
+  .qr-block td:first-child { color: var(--gold); font-weight: 600; padding-right: 10px; white-space: nowrap; }
+  .qr-block td:last-child { color: rgba(255,255,255,0.82); }
+
+  /* ── Failures list ───────────────────────────────────────────── */
+  .failures-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+  .failures-list li {
+    background: var(--white);
+    border-left: 4px solid #C94040;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    box-shadow: var(--shadow);
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────────── */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--teal);
+    color: var(--white);
+    border: none;
+    border-radius: 24px;
+    padding: 10px 22px;
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.15s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: var(--teal-light); }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--grey-2);
+    border-radius: 24px;
+    padding: 8px 18px;
+    font-size: 0.82rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-ghost:hover { border-color: var(--navy); background: var(--grey-1); }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+  /* ── Print / save toast ──────────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: var(--radius-lg);
+    font-size: 0.84rem;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 500;
+    max-width: 280px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── Two-column notes ────────────────────────────────────────── */
+  .notes-area {
+    width: 100%;
+    min-height: 120px;
+    border: 1px solid var(--grey-1);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    font-size: 0.84rem;
+    font-family: var(--font-body);
+    resize: vertical;
+    background: var(--off-white);
+    color: var(--text);
+    transition: border-color 0.15s;
+    margin-top: 8px;
+  }
+  .notes-area:focus { outline: none; border-color: var(--teal); background: var(--white); }
+  .notes-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.10em;
+    color: var(--navy);
+    font-weight: 700;
+    margin-top: 16px;
+    display: block;
+  }
+
+  /* ── Civilian/service table ──────────────────────────────────── */
+  .compare-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  .compare-table th { background: var(--navy); color: var(--white); padding: 10px 14px; font-size: 0.78rem; text-align: left; }
+  .compare-table td { padding: 10px 14px; border-bottom: 1px solid var(--grey-1); font-size: 0.83rem; vertical-align: top; line-height: 1.55; color: var(--text-mid); }
+  .compare-table tr:nth-child(even) td { background: var(--off-white); }
+
+  /* ── Page reveal animation ───────────────────────────────────── */
+  .section { animation: fadeUp 0.3s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── Save indicator ──────────────────────────────────────────── */
+  .save-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--grey-2);
+    margin-right: 5px;
+    transition: background 0.3s;
+  }
+  .save-dot.saved { background: #2E9E6E; }
+
+  @media print {
+    .sidebar, .mobile-header, .btn-row, .toast { display: none !important; }
+    .shell { grid-template-columns: 1fr; }
+    .section { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Mobile header -->
+<div class="mobile-header">
+  <span class="logo">ThinkNeurodiversity</span>
+  <button class="burger" onclick="openSidebar()" aria-label="Open menu">&#9776;</button>
+</div>
+
+<div class="shell">
+
+  <!-- Sidebar nav -->
+  <nav class="sidebar" id="sidebar" role="navigation" aria-label="Workbook sections">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">ThinkNeurodiversity</div>
+      <div class="sidebar-title">Reasonable Adjustments in the Workplace</div>
+      <div class="sidebar-meta">Session Workbook &mdash; MOD / DBS 2026</div>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-label"><span class="save-dot" id="saveDot"></span>Your progress</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-pct" id="progressPct">0% complete</div>
+    </div>
+    <nav>
+      <div class="nav-section-label">Start</div>
+      <a href="#cover" class="nav-link active" data-section="cover">Cover &amp; About</a>
+      <a href="#before" class="nav-link" data-section="before">Before We Start</a>
+      <div class="nav-section-label">Sections</div>
+      <a href="#scene" class="nav-link" data-section="scene">1 &mdash; Scene Setting</a>
+      <a href="#fullpicture" class="nav-link" data-section="fullpicture">2 &mdash; The Full Picture</a>
+      <a href="#caselaw" class="nav-link" data-section="caselaw">3 &mdash; Case Law</a>
+      <a href="#eees" class="nav-link" data-section="eees">4 &mdash; EEES&trade; Framework</a>
+      <a href="#wmw" class="nav-link" data-section="wmw">5 &mdash; Which Means What&trade;</a>
+      <a href="#scenarios" class="nav-link" data-section="scenarios">6 &mdash; Your Scenarios</a>
+      <div class="nav-section-label">Close</div>
+      <a href="#truefalsereview" class="nav-link" data-section="truefalsereview">True or False &mdash; Review</a>
+      <a href="#toolkit" class="nav-link" data-section="toolkit">Your Toolkit</a>
+      <a href="#reference" class="nav-link" data-section="reference">Quick Reference</a>
+    </nav>
+    <div class="sidebar-footer">
+      Matt Gupwell &middot; ThinkNeurodiversity Ltd<br>
+      Divergence Works CIC &middot; thinkneurodiversity.co.uk<br>
+      Confidential &mdash; Training Use Only
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <!-- COVER -->
+    <div class="cover" id="cover">
+      <div class="cover-inner">
+        <div class="cover-eyebrow">Session Workbook &mdash; MOD / DBS 2026</div>
+        <h1 class="cover-title">Reasonable Adjustments<br>in the Workplace</h1>
+        <p class="cover-subtitle">A practical session for HR caseworkers across MOD and DBS</p>
+        <div class="cover-fields">
+          <div class="cover-field">
+            <label for="name">Your name</label>
+            <input type="text" id="name" placeholder="Enter your name" autocomplete="name">
+          </div>
+          <div class="cover-field">
+            <label for="team">Team / Division</label>
+            <input type="text" id="team" placeholder="Enter your team">
+          </div>
+        </div>
+        <div class="cover-author">
+          <span><strong>Matt Gupwell</strong></span>
+          <span>ThinkNeurodiversity / Divergence Works CIC</span>
+          <span>thinkneurodiversity.co.uk</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW TO USE -->
+    <div class="section" id="howto">
+      <div class="section-eyebrow">How to use this workbook</div>
+      <h2>A few things before you start</h2>
+      <div class="callout callout-teal">
+        This workbook follows the session in order. Write in it as you go — there are no right answers. Your notes are saved in your browser as you type, so you can return to this page after the session without losing anything. If you clear your browser data, your notes will be lost.
+      </div>
+      <p style="font-size:0.88rem;color:var(--text-mid);line-height:1.65;margin-bottom:12px;">Work through each section in sequence. Some pages ask what you currently think. Others ask you to apply the frameworks to situations you know. Keep what you write — the toolkit at the end is designed to be useful after today, when a real case comes up.</p>
+      <p style="font-size:0.88rem;color:var(--text-mid);line-height:1.65;"><strong>No names needed.</strong> When pages ask about real colleagues or cases, write enough to be useful to yourself. You do not need to identify anyone.</p>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="saveWorkbook()">&#8681; Save my notes (PDF)</button>
+        <button class="btn-ghost" onclick="clearAll()">&#10005; Clear all notes</button>
+      </div>
+    </div>
+    <hr class="section-divider">
+
+    <!-- BEFORE WE START: NINE MOMENTS -->
+    <div class="section" id="before">
+      <div class="section-eyebrow">Before We Start</div>
+      <h2>Nine Moments of Reflection</h2>
+      <div class="section-desc">Before Matt covers the answers, work through these privately. There are no right or wrong responses. This is about noticing where your own experience sits, so you can connect it to the frameworks later.</div>
+
+      <h3>Moments 1&ndash;4: about yourself and others</h3>
+      <div class="reflection-grid">
+        <div class="reflection-card">
+          <div class="moment-tag">Moment 1</div>
+          <p>Someone you know who is always late for everything. Is it attitude &mdash; or something else?</p>
+          <textarea id="m1" placeholder="Your thoughts..." aria-label="Moment 1 response"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Moment 2</div>
+          <p>Big news overnight, still had to show up. How did that affect your capacity?</p>
+          <textarea id="m2" placeholder="Your thoughts..." aria-label="Moment 2 response"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Moment 3</div>
+          <p>Arrived somewhere new and immediately felt off. Could you feel it affecting how you managed yourself?</p>
+          <textarea id="m3" placeholder="Your thoughts..." aria-label="Moment 3 response"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Moment 4</div>
+          <p>Really upset or angry. Did one of your senses feel more heightened, or were you less aware of others?</p>
+          <textarea id="m4" placeholder="Your thoughts..." aria-label="Moment 4 response"></textarea>
+        </div>
+      </div>
+
+      <h3>Moments 5&ndash;9: communication and outcomes</h3>
+      <div class="reflection-grid">
+        <div class="reflection-card">
+          <div class="moment-tag">Moment 5</div>
+          <p>A message you tried to communicate fell flat. What did you do differently afterwards?</p>
+          <textarea id="m5" placeholder="Your thoughts..." aria-label="Moment 5 response"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Moment 6</div>
+          <p>You misunderstood a message someone was trying to get across. Where was the gap?</p>
+          <textarea id="m6" placeholder="Your thoughts..." aria-label="Moment 6 response"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Moment 7</div>
+          <p>Your knowledge of a topic was greater than the person you were communicating with. What barriers did that create?</p>
+          <textarea id="m7" placeholder="Your thoughts..." aria-label="Moment 7 response"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Moment 8</div>
+          <p>Someone&apos;s delivery style made communication harder. What was it about that style?</p>
+          <textarea id="m8" placeholder="Your thoughts..." aria-label="Moment 8 response"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Moment 9</div>
+          <p>The result went the opposite way despite your best efforts. What did you take from it?</p>
+          <textarea id="m9" placeholder="Your thoughts..." aria-label="Moment 9 response"></textarea>
+        </div>
+      </div>
+      <div class="callout">Hold onto what came up. We will connect these moments to EEES and WMW as the session unfolds.</div>
+    </div>
+    <hr class="section-divider">
+
+    <!-- TRUE OR FALSE -->
+    <div class="section" id="truefalse">
+      <div class="section-eyebrow">Before We Start</div>
+      <h2>True or False</h2>
+      <div class="section-desc">Eight statements. Select what you currently believe. Work through these before Matt covers the answers. We will revisit them at the end of the session.</div>
+      <ul class="tf-list" id="tfList">
+        <li class="tf-item" data-correct="false" data-id="tf1">
+          <div class="tf-num">1</div>
+          <div class="tf-content">
+            <p>An employer must only consider reasonable adjustments once an employee has a formal medical diagnosis.</p>
+            <div class="tf-buttons">
+              <button class="tf-btn" onclick="tfSelect(this,'true','tf1')">True</button>
+              <button class="tf-btn" onclick="tfSelect(this,'false','tf1')">False</button>
+            </div>
+            <div class="tf-reveal" id="rev-tf1">The duty is triggered by knowledge of disability, not a formal diagnosis.</div>
+          </div>
+        </li>
+        <li class="tf-item" data-correct="true" data-id="tf2">
+          <div class="tf-num">2</div>
+          <div class="tf-content">
+            <p>Reasonable adjustments are intended to remove disadvantage, not to give someone an unfair advantage.</p>
+            <div class="tf-buttons">
+              <button class="tf-btn" onclick="tfSelect(this,'true','tf2')">True</button>
+              <button class="tf-btn" onclick="tfSelect(this,'false','tf2')">False</button>
+            </div>
+            <div class="tf-reveal" id="rev-tf2">Adjustments level the playing field. They are not preferential treatment.</div>
+          </div>
+        </li>
+        <li class="tf-item" data-correct="false" data-id="tf3">
+          <div class="tf-num">3</div>
+          <div class="tf-content">
+            <p>Employers are required to agree to any adjustment requested by an employee if it relates to their disability.</p>
+            <div class="tf-buttons">
+              <button class="tf-btn" onclick="tfSelect(this,'true','tf3')">True</button>
+              <button class="tf-btn" onclick="tfSelect(this,'false','tf3')">False</button>
+            </div>
+            <div class="tf-reveal" id="rev-tf3">The duty is to consider and implement what is reasonable &mdash; not to agree every request.</div>
+          </div>
+        </li>
+        <li class="tf-item" data-correct="false" data-id="tf4">
+          <div class="tf-num">4</div>
+          <div class="tf-content">
+            <p>Cost alone is enough to justify refusing a reasonable adjustment.</p>
+            <div class="tf-buttons">
+              <button class="tf-btn" onclick="tfSelect(this,'true','tf4')">True</button>
+              <button class="tf-btn" onclick="tfSelect(this,'false','tf4')">False</button>
+            </div>
+            <div class="tf-reveal" id="rev-tf4">Cost is a factor in reasonableness, but cost alone is not a complete justification.</div>
+          </div>
+        </li>
+        <li class="tf-item" data-correct="true" data-id="tf5">
+          <div class="tf-num">5</div>
+          <div class="tf-content">
+            <p>A workplace policy or standard process can still be discriminatory if it puts a disabled person at a substantial disadvantage.</p>
+            <div class="tf-buttons">
+              <button class="tf-btn" onclick="tfSelect(this,'true','tf5')">True</button>
+              <button class="tf-btn" onclick="tfSelect(this,'false','tf5')">False</button>
+            </div>
+            <div class="tf-reveal" id="rev-tf5">PCPs applied equally can still be discriminatory if they create substantial disadvantage.</div>
+          </div>
+        </li>
+        <li class="tf-item" data-correct="true" data-id="tf6">
+          <div class="tf-num">6</div>
+          <div class="tf-content">
+            <p>The duty to make reasonable adjustments is ongoing and should be reviewed if circumstances change.</p>
+            <div class="tf-buttons">
+              <button class="tf-btn" onclick="tfSelect(this,'true','tf6')">True</button>
+              <button class="tf-btn" onclick="tfSelect(this,'false','tf6')">False</button>
+            </div>
+            <div class="tf-reveal" id="rev-tf6">The duty to adjust is anticipatory, ongoing and must be reviewed as circumstances change.</div>
+          </div>
+        </li>
+        <li class="tf-item" data-correct="false" data-id="tf7">
+          <div class="tf-num">7</div>
+          <div class="tf-content">
+            <p>Reasonable adjustments only apply to employees, not job applicants or former employees.</p>
+            <div class="tf-buttons">
+              <button class="tf-btn" onclick="tfSelect(this,'true','tf7')">True</button>
+              <button class="tf-btn" onclick="tfSelect(this,'false','tf7')">False</button>
+            </div>
+            <div class="tf-reveal" id="rev-tf7">The duty covers job applicants, employees and (in some circumstances) former employees.</div>
+          </div>
+        </li>
+        <li class="tf-item" data-correct="true" data-id="tf8">
+          <div class="tf-num">8</div>
+          <div class="tf-content">
+            <p>If an employer offers a different adjustment than the one requested, this can still meet their legal duty.</p>
+            <div class="tf-buttons">
+              <button class="tf-btn" onclick="tfSelect(this,'true','tf8')">True</button>
+              <button class="tf-btn" onclick="tfSelect(this,'false','tf8')">False</button>
+            </div>
+            <div class="tf-reveal" id="rev-tf8">An employer can offer a different adjustment, as long as it removes the disadvantage.</div>
+          </div>
+        </li>
+      </ul>
+      <div class="callout">Hold onto your answers. We will revisit these at the end of the session. If any of them change, note in the toolkit why your thinking shifted.</div>
+    </div>
+    <hr class="section-divider">
+
+    <!-- 1: SCENE SETTING -->
+    <div class="section" id="scene">
+      <div class="section-number">1</div>
+      <div class="section-eyebrow">Scene Setting</div>
+      <h2>The legal landscape</h2>
+      <div class="section-desc">You know the Equality Act. This section is about what happens when it is applied &mdash; or not.</div>
+
+      <h3>The duty in plain terms</h3>
+      <p style="font-size:0.88rem;color:var(--text-mid);line-height:1.65;margin-bottom:18px;">Under s.20, employers must make reasonable adjustments where a PCP, physical feature or absence of auxiliary aid puts a disabled person at substantial disadvantage. The duty is to remove the disadvantage &mdash; not treat everyone the same.</p>
+
+      <h3>The three duties</h3>
+      <div class="three-duties">
+        <div class="duty-card">
+          <span class="tag">PCP &mdash; s.20(3)</span>
+          <h4>Provision, Criterion or Practice</h4>
+          <p>Any rule, policy, requirement or practice &mdash; written or unwritten &mdash; that puts a disabled person at substantial disadvantage.</p>
+        </div>
+        <div class="duty-card">
+          <span class="tag">Physical Feature &mdash; s.20(5)</span>
+          <h4>Physical Feature</h4>
+          <p>A physical feature of the workplace that creates a barrier &mdash; must be removed, altered or worked around.</p>
+        </div>
+        <div class="duty-card">
+          <span class="tag">Auxiliary Aid &mdash; s.20(4)</span>
+          <h4>Auxiliary Aid</h4>
+          <p>Where the absence of an aid or service creates disadvantage, the employer must provide it.</p>
+        </div>
+      </div>
+      <div class="callout callout-navy"><strong>Key point:</strong> "Reasonable" has no fixed definition. Tribunals ask: did you genuinely consider the adjustment and document your reasoning &mdash; or did you dismiss it without proper thought?</div>
+
+      <span class="notes-label">My notes from this section</span>
+      <textarea class="notes-area" id="scene-notes" placeholder="Note anything that lands differently than you expected..."></textarea>
+      <span class="notes-label">A question I want to come back to</span>
+      <textarea class="notes-area" id="scene-q" style="min-height:70px;" placeholder=""></textarea>
+    </div>
+    <hr class="section-divider">
+
+    <!-- 2: THE FULL PICTURE -->
+    <div class="section" id="fullpicture">
+      <div class="section-number">2</div>
+      <div class="section-eyebrow">The Full Picture</div>
+      <h2>All conditions together</h2>
+      <div class="section-desc">Reasonable adjustment obligations cover all qualifying disabilities. In a hybrid civilian and military workforce, physical and MSK conditions are as central as mental health or neurodivergence.</div>
+
+      <div class="reflection-grid">
+        <div class="reflection-card">
+          <div class="moment-tag">Neurodivergent conditions</div>
+          <textarea id="fp1" placeholder="Conditions I knew about before today..." aria-label="Neurodivergent conditions"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Mental health conditions</div>
+          <textarea id="fp2" placeholder="Conditions I knew about before today..." aria-label="Mental health conditions"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Physical conditions (incl. MSK)</div>
+          <textarea id="fp3" placeholder="Conditions I knew about before today..." aria-label="Physical conditions"></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Acquired or progressive conditions</div>
+          <textarea id="fp4" placeholder="Conditions I knew about before today..." aria-label="Acquired or progressive conditions"></textarea>
+        </div>
+      </div>
+
+      <div class="callout callout-teal"><strong>Why it is never just one thing:</strong> Conditions rarely present in isolation. ADHD and anxiety co-occur in the majority of adults. MSK pain and depression are strongly correlated. PTSD almost always co-presents with anxiety. The implication: ask about experience, not diagnosis.</div>
+
+      <span class="notes-label">Think of a case where you now wonder whether there was more going on than was visible at the time. What might the other conditions have been?</span>
+      <textarea class="notes-area" id="fp-case" placeholder="Reflect here (no names needed)..."></textarea>
+      <span class="notes-label">What might have been done differently if this had been recognised earlier?</span>
+      <textarea class="notes-area" id="fp-diff" placeholder="Your thoughts..."></textarea>
+    </div>
+    <hr class="section-divider">
+
+    <!-- 3: CASE LAW -->
+    <div class="section" id="caselaw">
+      <div class="section-number">3</div>
+      <div class="section-eyebrow">Case Law in Practice</div>
+      <h2>What goes wrong &mdash; and what every case has in common</h2>
+      <div class="section-desc">Matt will walk through tribunal cases ranging from neurodivergence to physical conditions and MSK. For each one, note what stands out and what it means for your casework.</div>
+
+      <div class="case-card">
+        <div class="case-card-header">
+          <div class="case-name">Madden v Metropolitan Police (2305065/2024)<br><span style="font-weight:400;opacity:0.80;">ADHD + anxiety + disciplinary process</span></div>
+          <div class="case-tag">ADHD</div>
+        </div>
+        <div class="case-body">
+          <p class="case-summary">The tribunal found that the employer failed to consider the claimant&apos;s ADHD and anxiety before progressing a disciplinary process. Evidence of the disability did not reach the decision-maker.</p>
+          <div class="case-fields">
+            <div class="case-field"><label>What struck me about this case</label><textarea id="cl-mad-1" placeholder="Your notes..."></textarea></div>
+            <div class="case-field"><label>What this means for my casework</label><textarea id="cl-mad-2" placeholder="Your notes..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-card-header">
+          <div class="case-name">Ferraro v DWP<br><span style="font-weight:400;opacity:0.80;">Physical condition &mdash; all three s.20 duties in one case</span></div>
+          <div class="case-tag">Physical</div>
+        </div>
+        <div class="case-body">
+          <p class="case-summary">A rare case in which all three s.20 duties &mdash; PCP, physical feature, and auxiliary aid &mdash; were engaged simultaneously. The tribunal found failure across all three, and that hybrid working was an available and proportionate adjustment.</p>
+          <div class="case-fields">
+            <div class="case-field"><label>What struck me about this case</label><textarea id="cl-fer-1" placeholder="Your notes..."></textarea></div>
+            <div class="case-field"><label>What this means for my casework</label><textarea id="cl-fer-2" placeholder="Your notes..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-card-header">
+          <div class="case-name">Williams v Royal Mail (2412913/2023)<br><span style="font-weight:400;opacity:0.80;">Autism + start time PCP &mdash; a 45-minute tribunal</span></div>
+          <div class="case-tag">Autism</div>
+        </div>
+        <div class="case-body">
+          <p class="case-summary">The claimant&apos;s autism meant a fixed 8am start was a substantial disadvantage. The employer asserted operational need without evidencing it. The tribunal found for the claimant in 45 minutes.</p>
+          <div class="case-fields">
+            <div class="case-field"><label>What struck me about this case</label><textarea id="cl-wil-1" placeholder="Your notes..."></textarea></div>
+            <div class="case-field"><label>What this means for my casework</label><textarea id="cl-wil-2" placeholder="Your notes..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-card-header">
+          <div class="case-name">Ziga v Anglian Windows<br><span style="font-weight:400;opacity:0.80;">Depression, anxiety and joint pain &mdash; the four-day week</span></div>
+          <div class="case-tag">Mental Health</div>
+        </div>
+        <div class="case-body">
+          <p class="case-summary">The claimant requested a four-day week as an adjustment for a combination of mental health and physical conditions. The employer refused without genuine consideration. The tribunal found the refusal indefensible.</p>
+          <div class="case-fields">
+            <div class="case-field"><label>What struck me about this case</label><textarea id="cl-zig-1" placeholder="Your notes..."></textarea></div>
+            <div class="case-field"><label>What this means for my casework</label><textarea id="cl-zig-2" placeholder="Your notes..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-navy" style="margin-top:24px;"><strong>The common thread across every case:</strong> no framework, no structured conversation, no adjustment. Every case was avoidable.</div>
+
+      <!-- Late-stage disclosure -->
+      <h3 style="margin-top:32px;">Late-Stage Disclosure &mdash; The Legal Test</h3>
+      <p style="font-size:0.86rem;color:var(--text-mid);line-height:1.65;margin-bottom:16px;">When a disability or health condition is raised partway through a grievance, disciplinary or appeal &mdash; whether neurodivergent, physical, mental health or MSK &mdash; the first question is not &ldquo;why now?&rdquo; It is whether the disability duty was already engaged.</p>
+      <ul class="checklist">
+        <li><strong>Has something relevant been disclosed?</strong> A formal diagnosis is not required. Knowledge or constructive knowledge of difficulties consistent with a condition is enough.</li>
+        <li><strong>Pause &mdash; check it has reached the decision-maker.</strong> Has this information actually reached the person making the decision? Document that it has &mdash; or that it hasn&apos;t &mdash; and why.</li>
+        <li><strong>Ask and document: arising in consequence?</strong> Could the conduct have arisen in consequence of this condition? Record the answer either way, with reasoning.</li>
+        <li><strong>Consider proportionality and alternatives.</strong> Is the proposed outcome proportionate? What less severe alternative exists: explicit guidance, a supported conversation, a documented agreement?</li>
+        <li><strong>If escalation proceeds, show your working.</strong> The written rationale must show all of the above was considered, not just that a policy was applied.</li>
+      </ul>
+      <div class="callout"><strong>Grosset principle (City of York Council v Grosset, 2018):</strong> The question is not whether anyone named the link between disability and conduct at the time. It is whether the conduct arose in consequence of the disability. You must consider it &mdash; and document that you did.</div>
+      <span class="notes-label">My notes on applying this in casework</span>
+      <textarea class="notes-area" id="cl-grosset" placeholder="Your notes..."></textarea>
+
+      <!-- High-value cases -->
+      <h3 style="margin-top:36px;">Further Cases &mdash; High-Value Claims</h3>
+      <p style="font-size:0.84rem;color:var(--text-mid);margin-bottom:18px;line-height:1.55;">These cases illustrate the cost of getting it wrong. Note what each one teaches about your own processes.</p>
+
+      <div class="case-card">
+        <div class="case-card-header">
+          <div class="case-name">Wright-Turner v Hammersmith &amp; Fulham<br><span style="font-weight:400;opacity:0.80;">ADHD + PTSD &mdash; dismissal on day one of sick leave</span></div>
+          <div class="case-tag">&pound;4.58M</div>
+        </div>
+        <div class="case-body">
+          <div class="case-fields">
+            <div class="case-field"><label>What struck me about this case</label><textarea id="cl-wt-1" placeholder="Your notes..."></textarea></div>
+            <div class="case-field"><label>What this means for my casework</label><textarea id="cl-wt-2" placeholder="Your notes..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-card-header">
+          <div class="case-name">Barrow v Kellogg Brown &amp; Root (2021)<br><span style="font-weight:400;opacity:0.80;">Cancer &mdash; 36 years&apos; service &mdash; behaviour changed by medication</span></div>
+          <div class="case-tag">&pound;2.57M</div>
+        </div>
+        <div class="case-body">
+          <div class="case-fields">
+            <div class="case-field"><label>What struck me about this case</label><textarea id="cl-bar-1" placeholder="Your notes..."></textarea></div>
+            <div class="case-field"><label>What this means for my casework</label><textarea id="cl-bar-2" placeholder="Your notes..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-card-header">
+          <div class="case-name">Borg-Neal v Lloyds Banking Group (2202667/2022)<br><span style="font-weight:400;opacity:0.80;">Dyslexia + conduct in a training session</span></div>
+          <div class="case-tag">&pound;470K+</div>
+        </div>
+        <div class="case-body">
+          <div class="case-fields">
+            <div class="case-field"><label>What struck me about this case</label><textarea id="cl-bn-1" placeholder="Your notes..."></textarea></div>
+            <div class="case-field"><label>What this means for my casework</label><textarea id="cl-bn-2" placeholder="Your notes..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:28px;">The six common failures across all cases</h3>
+      <ul class="failures-list">
+        <li>Waiting for a diagnosis before acting.</li>
+        <li>Asserting operational need without evidencing it.</li>
+        <li>No documentation of genuine consideration.</li>
+        <li>Withdrawing adjustments without review.</li>
+        <li>Treating conduct and disability as separate when they were not.</li>
+        <li>Not taking informal disclosure seriously.</li>
+      </ul>
+
+      <!-- Civilian and service -->
+      <h3 style="margin-top:32px;">Civilian and Service Communication: Recognising the Difference</h3>
+      <p style="font-size:0.84rem;color:var(--text-mid);margin-bottom:14px;line-height:1.55;">DBS caseworkers move between two communication cultures every day. Neither is wrong. Assuming one is the baseline causes real friction &mdash; especially when the person you are supporting is neurodivergent.</p>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Service communication norms</th><th>Civilian workplace norms</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Direct, succinct, removes ambiguity. Clear chains of command. Instruction is explicit and expected to be followed. Stoicism and &ldquo;get on with it&rdquo; are valued. Feedback is blunt, immediate and task-focused.</td>
+            <td>Diplomatic and collaborative &mdash; often indirect. More stakeholders, slower consensus-based decisions. Instruction is often framed as a suggestion. Acknowledging struggle is encouraged. Feedback is softened and relationship-aware, which can itself be a barrier for someone used to explicit instruction.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout callout-teal"><strong>What this means for ND people in or from service:</strong> Service structure can be a genuine fit for many autistic and ADHD personnel &mdash; explicit instructions and low ambiguity remove exactly the barriers civilian workplaces tend to create. Leaving that environment can mean losing a support structure that was never named or recognised as one. Loss of structure through transition, redeployment or change of team is a known trigger point for previously-masked needs to surface.</div>
+      <span class="notes-label">What I notice in my own casework about communication differences</span>
+      <textarea class="notes-area" id="cl-comm" placeholder="Your observations..."></textarea>
+
+      <!-- PCPs in your organisation -->
+      <h3 style="margin-top:32px;">Discussion: PCPs in Your Organisation</h3>
+      <p style="font-size:0.84rem;color:var(--text-mid);margin-bottom:16px;line-height:1.55;">Think about the written policies and unwritten expectations across MOD and DBS. Bring real examples &mdash; names stay in the room.</p>
+      <span class="notes-label">Q1 &mdash; What PCPs exist in your organisation that you have never examined for potential disadvantage?</span>
+      <textarea class="notes-area" id="pcp-q1" placeholder="Think about both written policies and unwritten expectations: 'always being visible', 'responding within the hour', shift-pattern start times with no flexibility..."></textarea>
+      <span class="notes-label">Q2 &mdash; Are there processes that would structurally disadvantage someone with anxiety, PTSD, chronic pain, ADHD or a neurodivergent condition? Name one.</span>
+      <textarea class="notes-area" id="pcp-q2" placeholder="Your example..."></textarea>
+      <span class="notes-label">Q3 &mdash; If a tribunal asked you to justify one of those PCPs tomorrow, what would you say?</span>
+      <textarea class="notes-area" id="pcp-q3" placeholder="Could you explain why it is necessary and proportionate &mdash; with evidence, not assertion?"></textarea>
+    </div>
+    <hr class="section-divider">
+
+    <!-- 4: EEES -->
+    <div class="section" id="eees">
+      <div class="section-number">4</div>
+      <div class="section-eyebrow">EEES&trade; Framework</div>
+      <h2>Spotting what&apos;s beneath the surface</h2>
+      <div class="section-desc">Developed by Matt Gupwell, ThinkNeurodiversity. Four universal human lenses. Not diagnostic categories. They become visible as strain signals when someone is struggling and doesn&apos;t have the words or courage to ask for help.</div>
+
+      <div class="eees-grid">
+        <div class="eees-card" data-letter="E" data-color="e1">
+          <div class="eees-label">Executive Function</div>
+          <h4>Planning, prioritising, initiating, sequencing, working memory.</h4>
+          <p><strong>Under strain:</strong> Missed tasks, difficulty starting, appearing disorganised despite effort, forgetting conversations, losing things, late to appointments.</p>
+        </div>
+        <div class="eees-card" data-letter="E" data-color="e2">
+          <div class="eees-label">Emotional Regulation</div>
+          <h4>Managing emotional responses in real time, particularly under pressure or uncertainty.</h4>
+          <p><strong>Under strain:</strong> Disproportionate responses, emotional flatness, difficulty recovering from setbacks, perceived &lsquo;overreaction&rsquo; to feedback.</p>
+        </div>
+        <div class="eees-card" data-letter="E" data-color="e3">
+          <div class="eees-label">Environment</div>
+          <h4>Physical and social conditions in which work takes place: layout, noise, predictability, social demands.</h4>
+          <p><strong>Under strain:</strong> Avoidance, reduced performance in specific settings, inconsistent output, disruptive behaviour, disengaged appearance.</p>
+        </div>
+        <div class="eees-card" data-letter="S" data-color="s">
+          <div class="eees-label">Sensory Processing</div>
+          <h4>How the individual processes sensory input: light, sound, touch, smell, movement, proprioception.</h4>
+          <p><strong>Under strain:</strong> Fatigue, overwhelm, difficulty concentrating, physical discomfort affecting focus, heightened sensitivity to environment.</p>
+        </div>
+      </div>
+
+      <div class="callout">These are not diagnostic signals. They are human performance signals. Everyone experiences all four. The difference is degree, frequency and the capacity to self-regulate or recover.</div>
+
+      <div class="reflection-grid" style="margin-top:20px;">
+        <div class="reflection-card">
+          <div class="moment-tag">A colleague I am currently noticing</div>
+          <p style="font-size:0.82rem;">No names needed. Describe what you&apos;re observing.</p>
+          <textarea id="eees-obs" placeholder="What signals are you noticing?..."></textarea>
+        </div>
+        <div class="reflection-card">
+          <div class="moment-tag">Which EEES area(s) seem most relevant?</div>
+          <p style="font-size:0.82rem;">What might you ask?</p>
+          <textarea id="eees-ask" placeholder="Which areas? What question would you open with?..."></textarea>
+        </div>
+      </div>
+      <div class="callout callout-teal" style="margin-top:4px;">If you notice one or more of these and they relate to changes in performance, communication or what appears to be attitude &mdash; it is time for a supportive conversation, not a performance review.</div>
+    </div>
+    <hr class="section-divider">
+
+    <!-- 5: WMW -->
+    <div class="section" id="wmw">
+      <div class="section-number">5</div>
+      <div class="section-eyebrow">Which Means What&trade;</div>
+      <h2>Better, more structured adjustment conversations</h2>
+      <div class="section-desc">A person-first, non-judgemental way of discussing support and adjustments. WMW does not start with the problem. It starts with the person.</div>
+
+      <table class="wmw-table">
+        <thead><tr><th>Question</th><th>What you are trying to understand</th></tr></thead>
+        <tbody>
+          <tr><td>What</td><td>What specifically is harder about this? What is the actual impact on your work, your day, your experience? What does it stop you from doing or make significantly harder? What have you already tried?</td></tr>
+          <tr><td>When</td><td>When does it happen? Is it all the time, or in specific situations, at particular times of day, in certain meetings?</td></tr>
+          <tr><td>Who</td><td>Who is affected, or who is around when it happens? Does it happen with everyone, or in certain relationships or team dynamics?</td></tr>
+          <tr><td>Where</td><td>Where does it happen? Is this about a specific physical space, a remote or hybrid setup, a particular environment or site?</td></tr>
+          <tr><td>How</td><td>How can you see this changing or improving? How can I/We support you today, this week, before we&apos;ve completed the RAST process?</td></tr>
+        </tbody>
+      </table>
+      <div class="callout callout-navy"><strong>WMW does not require good faith to work &mdash; it simply reveals whether good faith exists.</strong> Genuine experience produces specific, consistent, personal detail. Invented experience does not.</div>
+
+      <h3 style="margin-top:28px;">WMW in Practice: Exercises</h3>
+      <div class="exercise-grid">
+        <div class="exercise-block">
+          <h4>Exercise 1: Noise sensitivity</h4>
+          <div class="scenario-text">A colleague tells you they are struggling with noise in the office. Work through the five WMW questions.</div>
+          <div class="wmw-mini">
+            <label>What</label><textarea id="wmw-e1-what" placeholder="What specifically is harder?..."></textarea>
+            <label>When</label><textarea id="wmw-e1-when" placeholder="When does it happen?..."></textarea>
+            <label>Who</label><textarea id="wmw-e1-who" placeholder="Who is around?..."></textarea>
+            <label>Where</label><textarea id="wmw-e1-where" placeholder="Which environment?..."></textarea>
+            <label>How</label><textarea id="wmw-e1-how" placeholder="What adjustments might help?..."></textarea>
+          </div>
+          <div class="callout callout-teal" style="margin-top:12px;font-size:0.78rem;">Possible adjustments: noise-cancelling headphones, acoustic panels, Loop earplugs, moving workstation, avoiding certain areas at certain times, more frequent breaks.</div>
+        </div>
+        <div class="exercise-block">
+          <h4>Exercise 2: Your real scenario</h4>
+          <div class="scenario-text">Think of a colleague or case you are currently aware of. You do not need to know what is going on. That is the point. Redact what you need to.</div>
+          <div class="wmw-mini">
+            <label>What</label><textarea id="wmw-e2-what" placeholder="What do you observe?..."></textarea>
+            <label>When</label><textarea id="wmw-e2-when" placeholder="When does it seem worse?..."></textarea>
+            <label>Who</label><textarea id="wmw-e2-who" placeholder="Who is involved?..."></textarea>
+            <label>Where</label><textarea id="wmw-e2-where" placeholder="Which setting?..."></textarea>
+            <label>How</label><textarea id="wmw-e2-how" placeholder="What would you ask first?..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="section-divider">
+
+    <!-- 6: SCENARIOS -->
+    <div class="section" id="scenarios">
+      <div class="section-number">6</div>
+      <div class="section-eyebrow">Your Scenarios</div>
+      <h2>Applying the frameworks to real cases</h2>
+      <div class="section-desc">Three scenarios drawn from the MOD and DBS casework context. For each, apply EEES and WMW. There are no single right answers &mdash; the aim is to build the habit of structured thinking.</div>
+
+      <div class="scenario-card">
+        <div class="scenario-header">
+          <span>Scenario A</span>
+          A serving personnel member discloses ADHD mid-disciplinary process for missing three case deadlines. Their line manager says: &lsquo;They have been fine for years &mdash; why are they raising this now?&rsquo;
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-fields">
+            <div class="scenario-field"><label>EEES signals I would look for</label><textarea id="sc-a-eees" placeholder="Which of the four areas? What behaviours suggest strain?..."></textarea></div>
+            <div class="scenario-field"><label>WMW questions I would use</label><textarea id="sc-a-wmw" placeholder="Which questions? What would you ask first?..."></textarea></div>
+            <div class="scenario-field"><label>Adjustments I would consider</label><textarea id="sc-a-adj" placeholder="What adjustments might address the underlying need?..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-header">
+          <span>Scenario B</span>
+          A civilian caseworker returning from a six-week absence related to PTSD requests hybrid working as a reasonable adjustment. Their manager says operational requirements mean the role needs to be office-based.
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-fields">
+            <div class="scenario-field"><label>EEES signals I would look for</label><textarea id="sc-b-eees" placeholder="Which of the four areas? What behaviours suggest strain?..."></textarea></div>
+            <div class="scenario-field"><label>WMW questions I would use</label><textarea id="sc-b-wmw" placeholder="Which questions? What would you ask first?..."></textarea></div>
+            <div class="scenario-field"><label>Adjustments I would consider</label><textarea id="sc-b-adj" placeholder="What adjustments might address the underlying need?..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scenario-card">
+        <div class="scenario-header">
+          <span>Scenario C</span>
+          A long-serving DBS caseworker is struggling since a team restructure. No formal diagnosis exists. Their performance has dropped and they seem disengaged. A formal capability process has been suggested.
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-fields">
+            <div class="scenario-field"><label>EEES signals I would look for</label><textarea id="sc-c-eees" placeholder="Which of the four areas? What behaviours suggest strain?..."></textarea></div>
+            <div class="scenario-field"><label>WMW questions I would use</label><textarea id="sc-c-wmw" placeholder="Which questions? What would you ask first?..."></textarea></div>
+            <div class="scenario-field"><label>Adjustments I would consider</label><textarea id="sc-c-adj" placeholder="What adjustments might address the underlying need?..."></textarea></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="section-divider">
+
+    <!-- TRUE OR FALSE: REVIEW -->
+    <div class="section" id="truefalsereview">
+      <div class="section-eyebrow">End of Session</div>
+      <h2>Revisiting the True or False</h2>
+      <div class="section-desc">Go back to your earlier answers and compare them to the correct responses below. Has anything changed?</div>
+
+      <div style="background:var(--white);border:1px solid var(--grey-1);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr>
+            <th style="background:var(--navy);color:var(--white);padding:10px 14px;font-size:0.78rem;text-align:left;width:40px;">#</th>
+            <th style="background:var(--navy);color:var(--white);padding:10px 14px;font-size:0.78rem;text-align:left;">Statement</th>
+            <th style="background:var(--navy);color:var(--white);padding:10px 14px;font-size:0.78rem;text-align:left;width:80px;">Answer</th>
+            <th style="background:var(--navy);color:var(--white);padding:10px 14px;font-size:0.78rem;text-align:left;">Why</th>
+          </tr></thead>
+          <tbody id="tfReviewBody"></tbody>
+        </table>
+      </div>
+
+      <span class="notes-label">Anything that changed? Note why your thinking shifted:</span>
+      <textarea class="notes-area" id="tf-shifted" placeholder="Reflect here..."></textarea>
+    </div>
+    <hr class="section-divider">
+
+    <!-- IMPLEMENTING ADJUSTMENTS -->
+    <div class="section" id="implementing">
+      <div class="section-eyebrow">Implementing Adjustments</div>
+      <h2>The Practical Steps</h2>
+      <ul class="checklist">
+        <li><strong>Initial conversation.</strong> Meet privately. Use WMW. Do not start with diagnosis. Do not start with &ldquo;what do you want?&rdquo;. Start with &ldquo;what is making this harder?&rdquo;</li>
+        <li><strong>Identify barriers.</strong> Use EEES as a lens. Which of the four areas is under strain? Often it will be more than one. Note what you find.</li>
+        <li><strong>Trial adjustments.</strong> Implement for 4&ndash;6 weeks with clear documentation. Document what is being trialled, why, and what &ldquo;success&rdquo; looks like. This is your legal record.</li>
+        <li><strong>Review and adjust.</strong> Conduct a mid-trial and final review. Did the adjustment work? Has the presenting need changed? The duty is ongoing.</li>
+      </ul>
+      <div class="callout callout-teal"><strong>Ask &rarr; Trial &rarr; Review &rarr; Record</strong> &mdash; the four steps that make your process both effective and legally defensible.</div>
+
+      <h3 style="margin-top:24px;">Support channels available</h3>
+      <div class="three-duties" style="margin-top:14px;">
+        <div class="duty-card">
+          <span class="tag">Employee-initiated</span>
+          <h4>Access to Work</h4>
+          <p>Funding for tech, coaching, support workers, travel and workplace needs assessments. Up to &pound;66,000+ per person.</p>
+        </div>
+        <div class="duty-card">
+          <span class="tag">Employer-initiated</span>
+          <h4>Occupational Health</h4>
+          <p>Clinical assessment and recommendations. Referral is support, not investigation.</p>
+        </div>
+        <div class="duty-card">
+          <span class="tag">Either party</span>
+          <h4>Workplace Needs Assessment</h4>
+          <p>Tailored adjustment recommendations &mdash; particularly useful where the employee cannot easily articulate their own needs.</p>
+        </div>
+      </div>
+    </div>
+    <hr class="section-divider">
+
+    <!-- TOOLKIT -->
+    <div class="section" id="toolkit">
+      <div class="section-eyebrow">Your Toolkit from Today</div>
+      <h2>Pull together what you have noticed</h2>
+      <div class="section-desc">These pages are yours to carry forward. Return to this workbook when a real case comes up.</div>
+
+      <div class="toolkit-field">
+        <div class="tk-label">One legal principle I will apply differently from now on</div>
+        <p>The law I already knew &mdash; and how it lands differently now I see how tribunals apply it.</p>
+        <textarea id="tk-legal" placeholder="Your reflection..."></textarea>
+      </div>
+      <div class="toolkit-field">
+        <div class="tk-label">One PCP I need to look at again</div>
+        <p>Something that may be creating disadvantage without anyone having named it yet.</p>
+        <textarea id="tk-pcp" placeholder="Your reflection..."></textarea>
+      </div>
+      <div class="toolkit-field">
+        <div class="tk-label">One conversation I will have differently using WMW</div>
+        <p>A situation where I would normally have waited, or not started the conversation at all.</p>
+        <textarea id="tk-wmw" placeholder="Your reflection..."></textarea>
+      </div>
+      <div class="toolkit-field">
+        <div class="tk-label">One cultural shift I want to influence</div>
+        <p>Something we do that makes it harder for people to ask &mdash; and how I could change that.</p>
+        <textarea id="tk-culture" placeholder="Your reflection..."></textarea>
+      </div>
+
+      <div class="callout callout-navy" style="margin-top:8px;"><strong>You do not need to be a condition expert.</strong> You need to care enough to ask the right questions &mdash; and now you have the framework to do it.</div>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="saveWorkbook()">&#8681; Save / Print my completed workbook</button>
+      </div>
+    </div>
+    <hr class="section-divider">
+
+    <!-- QUICK REFERENCE -->
+    <div class="section" id="reference">
+      <div class="section-eyebrow">Quick Reference</div>
+      <h2>Key frameworks and cases at a glance</h2>
+
+      <div class="qr-grid">
+        <div class="qr-block">
+          <h4>EEES&trade; at a glance</h4>
+          <table>
+            <tr><td>E</td><td>Executive Function: missed tasks, difficulty starting, losing things, forgotten conversations.</td></tr>
+            <tr><td>E</td><td>Emotional Regulation: disproportionate responses, flatness, difficulty recovering, perceived overreaction.</td></tr>
+            <tr><td>E</td><td>Environment: avoidance, inconsistent output, disengaged in specific settings.</td></tr>
+            <tr><td>S</td><td>Sensory: fatigue, overwhelm, difficulty concentrating, complaints about environment.</td></tr>
+          </table>
+        </div>
+        <div class="qr-block">
+          <h4>WMW&trade; at a glance</h4>
+          <table>
+            <tr><td>What</td><td>What specifically is harder? What is the actual impact?</td></tr>
+            <tr><td>When</td><td>When does it happen? Consistently or in specific situations?</td></tr>
+            <tr><td>Who</td><td>Who is around? All relationships or specific ones?</td></tr>
+            <tr><td>Where</td><td>Which environment, site or setting?</td></tr>
+            <tr><td>How</td><td>How does it affect output? What has already been tried?</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="qr-block" style="margin-top:0;">
+        <h4>Key cases</h4>
+        <table>
+          <tr><td>Madden v Met Police</td><td>Consider disability before disciplinary. Evidence must reach decision-makers.</td></tr>
+          <tr><td>Grosset (City of York v)</td><td>Arising in consequence: you must consider it and document that you did.</td></tr>
+          <tr><td>Williams v Royal Mail</td><td>Operational objections must be evidenced, not asserted.</td></tr>
+          <tr><td>Ferraro v DWP</td><td>Hybrid working as RA is established. Trivial-cost adjustments are indefensible to refuse.</td></tr>
+          <tr><td>Wright-Turner</td><td>Dismissal on sick leave with no process. Award &pound;4.58M.</td></tr>
+          <tr><td>Borg-Neal v Lloyds</td><td>Zero-tolerance must be contextualised by disability. Award &pound;470K+.</td></tr>
+        </table>
+      </div>
+
+      <div class="callout" style="margin-top:18px;">
+        <strong>ThinkNeurodiversity / Divergence Works CIC</strong><br>
+        Matt Gupwell &middot; thinkneurodiversity.co.uk &middot; Confidential &mdash; Training Use Only
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── IDs to save ──────────────────────────────────────────────────
+const SAVE_IDS = [
+  'name','team',
+  'm1','m2','m3','m4','m5','m6','m7','m8','m9',
+  'fp1','fp2','fp3','fp4','fp-case','fp-diff',
+  'scene-notes','scene-q',
+  'cl-mad-1','cl-mad-2','cl-fer-1','cl-fer-2','cl-wil-1','cl-wil-2','cl-zig-1','cl-zig-2',
+  'cl-wt-1','cl-wt-2','cl-bar-1','cl-bar-2','cl-bn-1','cl-bn-2',
+  'cl-grosset','cl-comm','pcp-q1','pcp-q2','pcp-q3',
+  'eees-obs','eees-ask',
+  'wmw-e1-what','wmw-e1-when','wmw-e1-who','wmw-e1-where','wmw-e1-how',
+  'wmw-e2-what','wmw-e2-when','wmw-e2-who','wmw-e2-where','wmw-e2-how',
+  'sc-a-eees','sc-a-wmw','sc-a-adj','sc-b-eees','sc-b-wmw','sc-b-adj','sc-c-eees','sc-c-wmw','sc-c-adj',
+  'tf-shifted','tk-legal','tk-pcp','tk-wmw','tk-culture'
+];
+const TF_IDS = ['tf1','tf2','tf3','tf4','tf5','tf6','tf7','tf8'];
+const TF_CORRECT = { tf1:'false', tf2:'true', tf3:'false', tf4:'false', tf5:'true', tf6:'true', tf7:'false', tf8:'true' };
+const TF_STMTS = [
+  'An employer must only consider reasonable adjustments once an employee has a formal medical diagnosis.',
+  'Reasonable adjustments are intended to remove disadvantage, not to give someone an unfair advantage.',
+  'Employers are required to agree to any adjustment requested by an employee if it relates to their disability.',
+  'Cost alone is enough to justify refusing a reasonable adjustment.',
+  'A workplace policy or standard process can still be discriminatory if it puts a disabled person at a substantial disadvantage.',
+  'The duty to make reasonable adjustments is ongoing and should be reviewed if circumstances change.',
+  'Reasonable adjustments only apply to employees, not job applicants or former employees.',
+  'If an employer offers a different adjustment than the one requested, this can still meet their legal duty.',
+];
+const TF_WHY = [
+  'The duty is triggered by knowledge of disability, not a formal diagnosis.',
+  'Adjustments level the playing field. They are not preferential treatment.',
+  'The duty is to consider and implement what is reasonable — not to agree every request.',
+  'Cost is a factor in reasonableness, but cost alone is not a complete justification.',
+  'PCPs applied equally can still be discriminatory if they create substantial disadvantage.',
+  'The duty to adjust is anticipatory, ongoing and must be reviewed as circumstances change.',
+  'The duty covers job applicants, employees and (in some circumstances) former employees.',
+  'An employer can offer a different adjustment, as long as it removes the disadvantage.',
+];
+
+// ── TF selections ────────────────────────────────────────────────
+let tfAnswers = {};
+
+function tfSelect(btn, value, id) {
+  const li = btn.closest('.tf-item');
+  const buttons = li.querySelectorAll('.tf-btn');
+  buttons.forEach(b => b.classList.remove('selected-true','selected-false'));
+  btn.classList.add('selected-' + value);
+  tfAnswers[id] = value;
+  localStorage.setItem('tf_' + id, value);
+  updateProgress();
+}
+
+// ── Load saved state ─────────────────────────────────────────────
+function loadState() {
+  SAVE_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    const val = localStorage.getItem('wb_' + id);
+    if (el && val !== null) el.value = val;
+  });
+  TF_IDS.forEach(id => {
+    const val = localStorage.getItem('tf_' + id);
+    if (val) {
+      tfAnswers[id] = val;
+      const li = document.querySelector('[data-id="' + id + '"]');
+      if (li) {
+        const btn = Array.from(li.querySelectorAll('.tf-btn')).find(b => b.textContent.toLowerCase() === val);
+        if (btn) btn.classList.add('selected-' + val);
+      }
+    }
+  });
+  buildTfReview();
+  updateProgress();
+}
+
+// ── Auto-save ────────────────────────────────────────────────────
+let saveTimer;
+function scheduleAutosave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(persistAll, 800);
+}
+
+function persistAll() {
+  SAVE_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) localStorage.setItem('wb_' + id, el.value);
+  });
+  document.getElementById('saveDot').classList.add('saved');
+  updateProgress();
+}
+
+SAVE_IDS.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', scheduleAutosave);
+});
+
+// ── Progress ─────────────────────────────────────────────────────
+function updateProgress() {
+  let filled = 0, total = SAVE_IDS.length + TF_IDS.length;
+  SAVE_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.value.trim().length > 0) filled++;
+  });
+  TF_IDS.forEach(id => { if (tfAnswers[id]) filled++; });
+  const pct = Math.round((filled / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '% complete';
+}
+
+// ── TF review table ──────────────────────────────────────────────
+function buildTfReview() {
+  const tbody = document.getElementById('tfReviewBody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  TF_IDS.forEach((id, i) => {
+    const correct = TF_CORRECT[id];
+    const userAns = tfAnswers[id] || null;
+    const isRight = userAns === correct;
+    const correctLabel = correct === 'true' ? 'True' : 'False';
+    const userLabel = userAns ? (userAns === 'true' ? 'True' : 'False') : 'Not answered';
+    const bg = !userAns ? '' : (isRight ? '#EDF8F3' : '#FDEAEA');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="padding:10px 14px;border-bottom:1px solid var(--grey-1);font-size:0.80rem;color:var(--text-mid);background:${bg};font-weight:700;">${i+1}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--grey-1);font-size:0.80rem;color:var(--text-mid);background:${bg};">${TF_STMTS[i]}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--grey-1);font-size:0.80rem;font-weight:700;color:${correct==='true'?'#2E9E6E':'#C94040'};background:${bg};">${correctLabel}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid var(--grey-1);font-size:0.80rem;color:var(--text-mid);background:${bg};">${TF_WHY[i]}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── Sidebar nav active state ─────────────────────────────────────
+const sections = document.querySelectorAll('[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector('.nav-link[data-section="' + e.target.id + '"]');
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.2, rootMargin: '-80px 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// ── Mobile sidebar ────────────────────────────────────────────────
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+navLinks.forEach(l => l.addEventListener('click', closeSidebar));
+
+// ── Toast ─────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── Save / print ──────────────────────────────────────────────────
+function saveWorkbook() {
+  persistAll();
+  buildTfReview();
+  showToast('Use Ctrl+P / Cmd+P to save as PDF with your notes included.');
+  setTimeout(() => window.print(), 1200);
+}
+
+// ── Clear all ─────────────────────────────────────────────────────
+function clearAll() {
+  if (!confirm('This will permanently delete all your notes. Are you sure?')) return;
+  SAVE_IDS.forEach(id => { localStorage.removeItem('wb_' + id); const el = document.getElementById(id); if (el) el.value = ''; });
+  TF_IDS.forEach(id => { localStorage.removeItem('tf_' + id); });
+  tfAnswers = {};
+  document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('selected-true','selected-false'));
+  document.querySelectorAll('.tf-item').forEach(li => li.classList.remove('correct','incorrect'));
+  document.querySelectorAll('.tf-reveal').forEach(r => r.style.display = 'none');
+  document.getElementById('saveDot').classList.remove('saved');
+  updateProgress();
+  showToast('All notes cleared.');
+}
+
+// ── Init ──────────────────────────────────────────────────────────
+loadState();
+</script>
+</body>
+</html>
