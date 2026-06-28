@@ -45,6 +45,7 @@
     display: grid;
     grid-template-columns: 260px 1fr;
     min-height: 100vh;
+    align-items: start;
   }
   @media (max-width: 860px) {
     .shell { grid-template-columns: 1fr; }
@@ -181,7 +182,7 @@
     max-width: 100%;
     margin: 0;
     position: relative;
-    overflow: hidden;
+    overflow-anchor: none;
   }
   .cover::before {
     content: '';
@@ -191,6 +192,7 @@
     border-radius: 50%;
     background: rgba(42,127,138,0.18);
     pointer-events: none;
+    overflow: hidden;
   }
   .cover-inner { max-width: 820px; margin: 0 auto; position: relative; }
   .cover-eyebrow {
@@ -364,7 +366,7 @@
     font-family: var(--font-body);
     color: var(--text);
     resize: vertical;
-    min-height: 72px;
+    min-height: 110px;
     background: var(--off-white);
     transition: border-color 0.15s;
     line-height: 1.5;
@@ -502,7 +504,7 @@
   }
   .case-field textarea {
     width: 100%;
-    min-height: 70px;
+    min-height: 140px;
     border: 1px solid var(--grey-1);
     border-radius: var(--radius);
     padding: 8px 10px;
@@ -597,7 +599,7 @@
   }
   .wmw-mini textarea {
     width: 100%;
-    min-height: 52px;
+    min-height: 90px;
     border: 1px solid var(--grey-1);
     border-radius: var(--radius);
     padding: 7px 9px;
@@ -642,7 +644,7 @@
   }
   .scenario-field textarea {
     width: 100%;
-    min-height: 90px;
+    min-height: 160px;
     border: 1px solid var(--grey-1);
     border-radius: var(--radius);
     padding: 8px 10px;
@@ -705,7 +707,7 @@
   .toolkit-field p { font-size: 0.82rem; color: var(--text-mid); margin-bottom: 10px; line-height: 1.5; }
   .toolkit-field textarea {
     width: 100%;
-    min-height: 90px;
+    min-height: 160px;
     border: 1px solid var(--grey-1);
     border-radius: var(--radius);
     padding: 8px 10px;
@@ -732,6 +734,28 @@
   .qr-block td { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.10); font-size: 0.78rem; vertical-align: top; line-height: 1.45; }
   .qr-block td:first-child { color: var(--gold); font-weight: 600; padding-right: 10px; white-space: nowrap; }
   .qr-block td:last-child { color: rgba(255,255,255,0.82); }
+
+  /* ── Stat cards ──────────────────────────────────────────────── */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 12px 0 24px; }
+  @media (max-width: 680px) { .stat-grid { grid-template-columns: 1fr; } }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--grey-1);
+    border-top: 3px solid var(--teal);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    font-weight: normal;
+    color: var(--teal);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .stat-label { font-size: 0.82rem; color: var(--text); line-height: 1.5; margin-bottom: 8px; }
+  .stat-source { font-size: 0.70rem; color: var(--grey-3); font-style: italic; line-height: 1.4; }
 
   /* ── Failures list ───────────────────────────────────────────── */
   .failures-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
@@ -801,7 +825,7 @@
   /* ── Two-column notes ────────────────────────────────────────── */
   .notes-area {
     width: 100%;
-    min-height: 120px;
+    min-height: 160px;
     border: 1px solid var(--grey-1);
     border-radius: var(--radius);
     padding: 10px 12px;
@@ -1137,6 +1161,69 @@
       <textarea class="notes-area" id="scene-notes" placeholder="Note anything that lands differently than you expected..."></textarea>
       <span class="notes-label">A question I want to come back to</span>
       <textarea class="notes-area" id="scene-q" style="min-height:70px;" placeholder=""></textarea>
+
+      <h3 style="margin-top:36px;">The State of Neurodiversity at Work</h3>
+      <p style="font-size:0.84rem;color:var(--text-mid);margin-bottom:20px;line-height:1.55;font-style:italic;">UK evidence 2024&ndash;2026. The data is consistent: tribunal claims are rising, manager confidence is low, and neurodivergent people are still masking, not disclosing, and facing discrimination.</p>
+
+      <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.10em;color:var(--teal);margin-bottom:8px;">Workforce reality</p>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">15&ndash;20%</div>
+          <div class="stat-label">of the UK working-age population are estimated to be neurodivergent</div>
+          <div class="stat-source">Birkbeck / Acas, 2025</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1 in 3</div>
+          <div class="stat-label">autistic people are in gainful employment &mdash; the worst employment outcome of any disability group</div>
+          <div class="stat-source">ONS Labour Force Survey, 2022</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">Only 6.5%</div>
+          <div class="stat-label">of organisations said managers were &lsquo;very confident&rsquo; in neurodiversity conversations</div>
+          <div class="stat-source">VinciWorks, 2026</div>
+        </div>
+      </div>
+
+      <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.10em;color:var(--teal);margin-bottom:8px;">The training gap</p>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">35%</div>
+          <div class="stat-label">of managers lack confidence discussing reasonable adjustments for neurodivergent employees</div>
+          <div class="stat-source">VinciWorks, 2026 &nbsp;|&nbsp; n&thinsp;=&thinsp;495 HR, L&amp;D and compliance professionals</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">39%</div>
+          <div class="stat-label">of organisations have delivered any neurodiversity training &mdash; only 21% have embedded it as ongoing</div>
+          <div class="stat-source">VinciWorks, 2026</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">31%</div>
+          <div class="stat-label">cite lack of staff awareness as the biggest barrier to neurodiversity support; 22% cite low manager confidence</div>
+          <div class="stat-source">VinciWorks, 2026</div>
+        </div>
+      </div>
+
+      <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.10em;color:var(--teal);margin-bottom:8px;">Legal and policy context</p>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">95%</div>
+          <div class="stat-label">rise in neurodiversity discrimination tribunal claims over five years &mdash; 517 cases in 2024/25</div>
+          <div class="stat-source">Irwin Mitchell analysis of HMCTS data, 2026</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">&pound;8,500</div>
+          <div class="stat-label">average cost of defending a single neurodiversity tribunal claim in legal fees alone &mdash; before any award</div>
+          <div class="stat-source">Irwin Mitchell, 2026</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">75%</div>
+          <div class="stat-label">of experts confirm a formal diagnosis is not necessary before making adjustments &mdash; need, not paperwork</div>
+          <div class="stat-source">Birkbeck / Acas, 2025</div>
+        </div>
+      </div>
+
+      <span class="notes-label">What does this data mean for your organisation specifically?</span>
+      <textarea class="notes-area" id="scene-evidence" placeholder="Your thoughts..."></textarea>
     </div>
     <hr class="section-divider">
 
@@ -1240,6 +1327,42 @@
 
       <div class="callout callout-navy" style="margin-top:24px;"><strong>The common thread across every case:</strong> no framework, no structured conversation, no adjustment. Every case was avoidable.</div>
 
+      <!-- Grosset and Drewniaczyk -->
+      <h3 style="margin-top:32px;">Further Case Law &mdash; Arising in Consequence and Time Limits</h3>
+      <p style="font-size:0.84rem;color:var(--text-mid);margin-bottom:18px;line-height:1.55;">Two further cases central to this session. Grosset is the anchor principle for every late-stage disclosure a caseworker will encounter.</p>
+
+      <div class="case-card">
+        <div class="case-card-header">
+          <div class="case-name">City of York Council v Grosset (2018)<br><span style="font-weight:400;opacity:0.80;">Cystic fibrosis &mdash; conduct &mdash; arising in consequence</span></div>
+          <div class="case-tag">s.15</div>
+        </div>
+        <div class="case-body">
+          <p class="case-summary">A teacher with cystic fibrosis was dismissed for gross misconduct after showing inappropriate content to pupils. The school knew about his condition but did not consider whether the impaired judgement arose from it. The Court of Appeal confirmed: employers do not need to know the link between disability and conduct at the time. The question is whether the conduct arose in consequence of the disability &mdash; and whether that was considered before the decision was made.</p>
+          <div class="case-fields">
+            <div class="case-field"><label>What struck me about this case</label><textarea id="cl-grosset-1" placeholder="Your notes..."></textarea></div>
+            <div class="case-field"><label>What this means for my casework</label><textarea id="cl-grosset-2" placeholder="Your notes..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:14px;"><strong>The Grosset principle:</strong> Knowledge of the condition is enough to trigger the duty to consider whether conduct arose in consequence of it. You must ask that question and document your answer &mdash; even where no formal link was named at the time. This applies to every condition type: physical, progressive, mental health, neurodivergent.</div>
+
+      <div class="case-card" style="margin-top:18px;">
+        <div class="case-card-header">
+          <div class="case-name">Drewniaczyk v Police Service of Scotland  |  de Vere v Tennent Caledonian<br><span style="font-weight:400;opacity:0.80;">ADHD &middot; Dyslexia &mdash; the time-bar irony</span></div>
+          <div class="case-tag">ADHD</div>
+        </div>
+        <div class="case-body">
+          <p class="case-summary">In both cases, substantively strong claims were dismissed as time-barred. In Drewniaczyk, ADHD and dyslexia in a documentation-heavy policing environment; in de Vere, ADHD diagnosed after employment ended. The irony: ADHD itself &mdash; through difficulty initiating action, poor urgency and time blindness &mdash; can directly cause the delay in bringing the claim.</p>
+          <div class="case-fields">
+            <div class="case-field"><label>What struck me about this case</label><textarea id="cl-drew-1" placeholder="Your notes..."></textarea></div>
+            <div class="case-field"><label>What this means for my casework</label><textarea id="cl-drew-2" placeholder="Your notes..."></textarea></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-teal" style="margin-top:14px;"><strong>For caseworkers:</strong> A late approach is often the disability talking, not a weak case. Do not read delay as opportunism. Employees with ADHD or dyslexia should be encouraged to seek advice immediately after any adverse employment event.</div>
+
       <!-- Late-stage disclosure -->
       <h3 style="margin-top:32px;">Late-Stage Disclosure &mdash; The Legal Test</h3>
       <p style="font-size:0.86rem;color:var(--text-mid);line-height:1.65;margin-bottom:16px;">When a disability or health condition is raised partway through a grievance, disciplinary or appeal &mdash; whether neurodivergent, physical, mental health or MSK &mdash; the first question is not &ldquo;why now?&rdquo; It is whether the disability duty was already engaged.</p>
@@ -1250,7 +1373,7 @@
         <li><strong>Consider proportionality and alternatives.</strong> Is the proposed outcome proportionate? What less severe alternative exists: explicit guidance, a supported conversation, a documented agreement?</li>
         <li><strong>If escalation proceeds, show your working.</strong> The written rationale must show all of the above was considered, not just that a policy was applied.</li>
       </ul>
-      <div class="callout"><strong>Grosset principle (City of York Council v Grosset, 2018):</strong> The question is not whether anyone named the link between disability and conduct at the time. It is whether the conduct arose in consequence of the disability. You must consider it &mdash; and document that you did.</div>
+      <div class="callout">Grosset is the anchor case for every late-stage disclosure a caseworker will encounter. The question is not whether disability is mentioned in the file. The question is whether it was genuinely considered before the decision was made.</div>
       <span class="notes-label">My notes on applying this in casework</span>
       <textarea class="notes-area" id="cl-grosset" placeholder="Your notes..."></textarea>
 
@@ -1322,6 +1445,15 @@
         </tbody>
       </table>
       <div class="callout callout-teal"><strong>What this means for ND people in or from service:</strong> Service structure can be a genuine fit for many autistic and ADHD personnel &mdash; explicit instructions and low ambiguity remove exactly the barriers civilian workplaces tend to create. Leaving that environment can mean losing a support structure that was never named or recognised as one. Loss of structure through transition, redeployment or change of team is a known trigger point for previously-masked needs to surface.</div>
+
+      <h3 style="margin-top:24px;">Four practical pointers for caseworkers</h3>
+      <ul class="checklist">
+        <li><strong>Translate, don&rsquo;t soften &mdash; in one direction.</strong> A direct request or blunt phrasing from an ND service member is not hostility. It is likely the only communication mode that feels honest and unambiguous. Don&rsquo;t read tone as the message.</li>
+        <li><strong>Translate, don&rsquo;t assume &mdash; in the other direction.</strong> Civilian-style feedback (&ldquo;it might be worth considering&hellip;&rdquo;) can be genuinely invisible as an instruction to someone used to explicit orders. State what you need plainly and in writing.</li>
+        <li><strong>Be the bridge, explicitly.</strong> Naming the cultural difference out loud builds trust. It signals you understand the context, which is itself a form of psychological safety.</li>
+        <li><strong>Watch for the transition point.</strong> If someone has recently left service or changed role, that transition is a high-risk window for previously-masked needs to surface &mdash; often expressed in directness that colleagues may misread as a complaint rather than a disclosure.</li>
+      </ul>
+
       <span class="notes-label">What I notice in my own casework about communication differences</span>
       <textarea class="notes-area" id="cl-comm" placeholder="Your observations..."></textarea>
 
@@ -1399,7 +1531,7 @@
           <tr><td>When</td><td>When does it happen? Is it all the time, or in specific situations, at particular times of day, in certain meetings?</td></tr>
           <tr><td>Who</td><td>Who is affected, or who is around when it happens? Does it happen with everyone, or in certain relationships or team dynamics?</td></tr>
           <tr><td>Where</td><td>Where does it happen? Is this about a specific physical space, a remote or hybrid setup, a particular environment or site?</td></tr>
-          <tr><td>How</td><td>How can you see this changing or improving? How can I/We support you today, this week, before we&apos;ve completed the RAST process?</td></tr>
+          <tr><td>How</td><td>How does this affect you? How does this make you feel about your work? How does this impact you when you are not at work?</td></tr>
         </tbody>
       </table>
       <div class="callout callout-navy"><strong>WMW does not require good faith to work &mdash; it simply reveals whether good faith exists.</strong> Genuine experience produces specific, consistent, personal detail. Invented experience does not.</div>
@@ -1596,7 +1728,7 @@
             <tr><td>When</td><td>When does it happen? Consistently or in specific situations?</td></tr>
             <tr><td>Who</td><td>Who is around? All relationships or specific ones?</td></tr>
             <tr><td>Where</td><td>Which environment, site or setting?</td></tr>
-            <tr><td>How</td><td>How does it affect output? What has already been tried?</td></tr>
+            <tr><td>How</td><td>How does this affect you? How does it make you feel about your work? How does it impact you outside work?</td></tr>
           </table>
         </div>
       </div>
@@ -1609,6 +1741,7 @@
           <tr><td>Williams v Royal Mail</td><td>Operational objections must be evidenced, not asserted.</td></tr>
           <tr><td>Ferraro v DWP</td><td>Hybrid working as RA is established. Trivial-cost adjustments are indefensible to refuse.</td></tr>
           <tr><td>Wright-Turner</td><td>Dismissal on sick leave with no process. Award &pound;4.58M.</td></tr>
+          <tr><td>Barrow v Kellogg Brown &amp; Root</td><td>Medication side effects are part of the disability. Long service creates a higher bar. Award &pound;2.57M.</td></tr>
           <tr><td>Borg-Neal v Lloyds</td><td>Zero-tolerance must be contextualised by disability. Award &pound;470K+.</td></tr>
         </table>
       </div>
@@ -1631,8 +1764,9 @@ const SAVE_IDS = [
   'name','team',
   'm1','m2','m3','m4','m5','m6','m7','m8','m9',
   'fp1','fp2','fp3','fp4','fp-case','fp-diff',
-  'scene-notes','scene-q',
+  'scene-notes','scene-q','scene-evidence',
   'cl-mad-1','cl-mad-2','cl-fer-1','cl-fer-2','cl-wil-1','cl-wil-2','cl-zig-1','cl-zig-2',
+  'cl-grosset-1','cl-grosset-2','cl-drew-1','cl-drew-2',
   'cl-wt-1','cl-wt-2','cl-bar-1','cl-bar-2','cl-bn-1','cl-bn-2',
   'cl-grosset','cl-comm','pcp-q1','pcp-q2','pcp-q3',
   'eees-obs','eees-ask',
